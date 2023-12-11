@@ -65,7 +65,7 @@ const int PORT = 3306; /* port 3306 */
 > g++ message.cpp telecom.cpp server.cpp client.cpp s1.cpp database.cpp -o s1 -lpthread -lmysqlclient 
 > ./s1
 ```
-- 编译/运行服务端
+- 编译/运行客户端
 
 ```shell
 > g++ message.cpp telecom.cpp server.cpp client.cpp database.cpp  c1.cpp -o c1 -lpthread -lmysqlclient
