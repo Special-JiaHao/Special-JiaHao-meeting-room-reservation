@@ -36,7 +36,7 @@ const int PORT = 3306; /* port 3306 */
 ## 系统演示
 [【Bilibili 金山预约系统演示】](https://raw.githubusercontent.com/Special-JiaHao/images/main/金山预约系统架构.png)
 ## 系统架构C/S
-- 系统采用C/S架构，服务端开启监听端口，用于接收客户端的访问请求，使用多线程去分别处理用户请求，同时服务端与Mysql数据库进行数据传输；客户端通过服务端开启的端口与服务端建立连接，同时接收用户输入发送响应的请求.
+系统采用C/S架构，服务端开启监听端口，用于接收客户端的访问请求，使用多线程去分别处理用户请求，同时服务端与Mysql数据库进行数据传输；客户端通过服务端开启的端口与服务端建立连接，同时接收用户输入发送响应的请求.
 ![系统架构](https://github.com/Special-JiaHao/images/blob/main/%E9%87%91%E5%B1%B1%E9%A2%84%E7%BA%A6%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84.png?raw=true)
 
 ## 设计逻辑（状态机模型）
