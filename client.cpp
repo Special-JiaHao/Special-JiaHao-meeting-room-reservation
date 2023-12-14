@@ -622,86 +622,65 @@ void Client::connectSystem(std::string serverIP, in_port_t serverPort) {
 	close(correspondFd);
 }
 
+void printTitle(std::string title, int width) {
+	for (int i = 0; i < (width - int(title.size())) / 2; i++) {
+		if (i == 0)	std::cout << "+";
+		else	std::cout << "-";
+	}
+	std::cout << title;
+	for (int i = 0; i < width - int(title.size()) - (width - int(title.size())) / 2; i++) {
+		if (i == width - int(title.size()) - (width - int(title.size())) / 2 - 1)	std::cout << "+";
+		else	std::cout << "-";
+	}
+	std::cout << std::endl;
+}
+
+void printSegmentationLine(int len[], int n) {
+	for (int i = 0; i < n; i++) {
+		if(i == 0)	std::cout << "+-";
+		else std::cout << "-+-";
+		for (int j = 0; j < len[i]; j++)	std::cout << '-';
+	}
+	std::cout << "-+" << std::endl;
+}
+
+void printContent(std::string content[], int len[], int n) { 
+	for (int k = 0; k < n; k++) {
+		if(k == 0)	std::cout << "| ";
+		else	std::cout << " | ";
+		int t = content[k].size();
+		for (int i = 0; i < (len[k] - t) / 2; i++)	std::cout << ' ';
+		std::cout << content[k];
+		for (int i = 0; i < len[k] - t - (len[k] - t) / 2; i++)	std::cout << ' ';
+		if (k == n - 1)	std::cout << " |";
+	}
+	std::cout << std::endl;
+}
+
+
+
 void showTableData(Message& message, std::string title, std::string type) {
 	if (type == "person") {
-		int len0 = 3, len1 = 4, len2 = 4, len3 = 8;
+		std::string content[4];
+		content[0] = "JID", content[1] = "Name", content[2] = "User", content[3] = "Password";
+		int len[4];
+		for (int i = 0; i < 4; i++)	len[i] = content[i].size();
 		for (int i = 1; i <= message.getMemberCount(); i++) {
 			auto item = message.getMember(i);
-			len0 = len0 < strlen(item.jid) ? strlen(item.jid) : len0;
-			len1 = len1 < strlen(item.name) ? strlen(item.name) : len1;
-			len2 = len2 < strlen(item.user) ? strlen(item.user) : len2;
-			len3 = len3 < strlen(item.password) ? strlen(item.password) : len3;
+			len[0] = len[0] < strlen(item.jid) ? strlen(item.jid) : len[0];
+			len[1] = len[1] < strlen(item.name) ? strlen(item.name) : len[1];
+			len[2] = len[2] < strlen(item.user) ? strlen(item.user) : len[2];
+			len[3] = len[3] < strlen(item.password) ? strlen(item.password) : len[3];
 		}
-		int width = len0 + len1 + len2 + len3 + 13;
-		for (int i = 0; i < (width - int(title.size())) / 2; i++) {
-			if (i == 0)	std::cout << "+";
-			else	std::cout << "-";
-		}
-		std::cout << title;
-		for (int i = 0; i < width - int(title.size()) - (width - int(title.size())) / 2; i++) {
-			if (i == width - int(title.size()) - (width - int(title.size())) / 2 - 1)	std::cout << "+";
-			else	std::cout << "-";
-		}
-		std::cout << std::endl;
-
-		std::cout << "| ";
-		for (int i = 0; i < (len0 - 3) / 2; i++)	std::cout << ' ';
-		std::cout << "JID";
-		for (int i = 0; i < len0 - 3 - (len0 - 3) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len1 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "Name";
-		for (int i = 0; i < len1 - 4 - (len1 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len2 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "User";
-		for (int i = 0; i < len2 - 4 - (len2 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len3 - 8) / 2; i++)	std::cout << ' ';
-		std::cout << "Password";
-		for (int i = 0; i < len3 - 8 - (len3 - 8) / 2; i++)	std::cout << ' ';
-		std::cout << " | " << std::endl;
-
-
+		int width = 13;
+		for (int i = 0; i < 4; i++)	width += len[i];
+		printTitle(title, width);
+		printContent(content, len, 4);
 		for (int i = 1; i <= message.getMemberCount(); i++) {
+			printSegmentationLine(len, 4);
 			auto item = message.getMember(i);
-			std::cout << "+-";
-			for (int j = 0; j < len0; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len1; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len2; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len3; j++)	std::cout << '-';
-			std::cout << "-+" << std::endl;
-
-			int t1 = strlen(item.jid), t2 = strlen(item.name), t3 = strlen(item.user), t4 = strlen(item.password);
-
-
-			std::cout << "| ";
-			for (int i = 0; i < (len0 - t1) / 2; i++)	std::cout << ' ';
-			std::cout << item.jid;
-			for (int i = 0; i < len0 - t1 - (len0 - t1) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len1 - t2) / 2; i++)	std::cout << ' ';
-			std::cout << item.name;
-			for (int i = 0; i < len1 - t2 - (len1 - t2) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len2 - t3) / 2; i++)	std::cout << ' ';
-			std::cout << item.user;
-			for (int i = 0; i < len2 - t3 - (len2 - t3) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len3 - t4) / 2; i++)	std::cout << ' ';
-			std::cout << item.password;
-			for (int i = 0; i < len3 - t4 - (len3 - t4) / 2; i++)	std::cout << ' ';
-			std::cout << " | " << std::endl;
-			//std::cout << "| " << item.jid << " | " << item.name << " | " << item.user << " | " << item.password << " |" << std::endl;
+			content[0] = item.jid, content[1] = item.name, content[2] = item.user, content[3] = item.password;
+			printContent(content, len, 4);
 		}
 		for (int i = 0; i < width; i++) {
 			if (i == 0 || i == width - 1)	std::cout << "+";
@@ -710,138 +689,43 @@ void showTableData(Message& message, std::string title, std::string type) {
 		std::cout << std::endl;
 	}
 	else {
-		int len0 = 2, len1 = 3, len2 = 4, len3 = 4, len4 = 4, len5 = 6, len6 = 6, len7 = 6;
+		std::string content[8];
+		content[0] = "ID", content[1] = "JID", content[2] = "Name", content[3] = "User", content[4] = "Date", content[5] = "Period", content[6] = "Room", content[7] = "Status";
+		int len[8];
+		for (int i = 0; i < 8; i++)	len[i] = content[i].size();
+		len[6] = len[7] = 6;
 		for (int i = 1; i <= message.getRecordCount(); i++) {
 			auto item = message.getRecord(i);
-			len1 = len1 < strlen(item.jid) ? strlen(item.jid) : len1;
-			len2 = len2 < strlen(item.name) ? strlen(item.name) : len2;
-			len3 = len3 < strlen(item.user) ? strlen(item.user) : len3;
-			len4 = len4 < strlen(item.data) ? strlen(item.data) : len4;
-			len5 = len5 < strlen(item.period) ? strlen(item.period) : len5;
+			len[1] = len[1] < strlen(item.jid) ? strlen(item.jid) : len[1];
+			len[2] = len[2] < strlen(item.name) ? strlen(item.name) : len[2];
+			len[3] = len[3] < strlen(item.user) ? strlen(item.user) : len[3];
+			len[4] = len[4] < strlen(item.data) ? strlen(item.data) : len[4];
+			len[5] = len[5] < strlen(item.period) ? strlen(item.period) : len[5];
 		}
-		int width = len0 + len1 + len2 + len3 + len4 + len5 + len6 + len7 + 25;
-		for (int i = 0; i < (width - int(title.size())) / 2; i++) {
-			if (i == 0)	std::cout << "+";
-			else	std::cout << "-";
-		}
-		std::cout << title;
-		for (int i = 0; i < width - int(title.size()) - (width - int(title.size())) / 2; i++) {
-			if (i == width - int(title.size()) - (width - int(title.size())) / 2 - 1)	std::cout << "+";
-			else	std::cout << "-";
-		}
-		std::cout << std::endl;
-
-		std::cout << "| ";
-		for (int i = 0; i < (len0 - 2) / 2; i++)	std::cout << ' ';
-		std::cout << "ID";
-		for (int i = 0; i < len0 - 2 - (len0 - 3) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len1 - 3) / 2; i++)	std::cout << ' ';
-		std::cout << "JID";
-		for (int i = 0; i < len1 - 3 - (len1 - 3) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len2 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "Name";
-		for (int i = 0; i < len2 - 4 - (len2 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len3 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "User";
-		for (int i = 0; i < len3 - 4 - (len3 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len4 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "Date";
-		for (int i = 0; i < len4 - 4 - (len4 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len5 - 6) / 2; i++)	std::cout << ' ';
-		std::cout << "Period";
-		for (int i = 0; i < len5 - 6 - (len5 - 6) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len7 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << "Room";
-		for (int i = 0; i < len7 - 4 - (len7 - 4) / 2; i++)	std::cout << ' ';
-		std::cout << " | ";
-
-		for (int i = 0; i < (len6 - 6) / 2; i++)	std::cout << ' ';
-		std::cout << "Status";
-		for (int i = 0; i < len6 - 6 - (len6 - 6) / 2; i++)	std::cout << ' ';
-		std::cout << " | " << std::endl;
-
-
+		int width = 25;
+		for (int i = 0; i < 8; i++)	width += len[i];
+		printTitle(title, width);
+		printContent(content, len, 8);
 		for (int i = 1; i <= message.getRecordCount(); i++) {
+			printSegmentationLine(len, 8);
 			auto item = message.getRecord(i);
-			std::cout << "+-";
-			for (int j = 0; j < len0; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len1; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len2; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len3; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len4; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len5; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len7; j++)	std::cout << '-';
-			std::cout << "-+-";
-			for (int j = 0; j < len6; j++)	std::cout << '-';
-			std::cout << "-+" << std::endl;
+			content[0] = std::to_string(i);
+			content[1] = item.jid;
+			content[2] = item.name;
+			content[3] = item.user;
+			content[4] = item.data;
+			content[5] = item.period;
+			if (item.roomID == 1)	content[6] = "紫阳湖";
+			else if (item.roomID == 2)	content[6] = "后官湖";
+			else if (item.roomID == 3)	content[6] = "清潭湖";
+			else if (item.roomID == 4)	content[6] = "黄家湖";
+			else if (item.roomID == 5)	content[6] = "杨春湖";
+			else	content[6] = "中山湖";
 
-			int t0 = 1, t1 = strlen(item.jid), t2 = strlen(item.name), t3 = strlen(item.user), t4 = strlen(item.data), t5 = strlen(item.period), t6 = 6, t7 = 6;
-
-			std::cout << "| ";
-			for (int i = 0; i < (len0 - t0) / 2; i++)	std::cout << ' ';
-			std::cout << i;
-			for (int i = 0; i < len0 - t0 - (len0 - t0) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len1 - t1) / 2; i++)	std::cout << ' ';
-			std::cout << item.jid;
-			for (int i = 0; i < len1 - t1 - (len1 - t1) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len2 - t2) / 2; i++)	std::cout << ' ';
-			std::cout << item.name;
-			for (int i = 0; i < len2 - t2 - (len2 - t2) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len3 - t3) / 2; i++)	std::cout << ' ';
-			std::cout << item.user;
-			for (int i = 0; i < len3 - t3 - (len3 - t3) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len4 - t4) / 2; i++)	std::cout << ' ';
-			std::cout << item.data;
-			for (int i = 0; i < len4 - t4 - (len4 - t4) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len5 - t5) / 2; i++)	std::cout << ' ';
-			std::cout << item.period;
-			for (int i = 0; i < len5 - t5 - (len5 - t5) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len6 - t6) / 2; i++)	std::cout << ' ';
-			if (item.roomID == 1)	std::cout << "紫阳湖";
-			else if (item.roomID == 2)	std::cout << "后官湖";
-			else if (item.roomID == 3)	std::cout << "清潭湖";
-			else if (item.roomID == 4)	std::cout << "黄家湖";
-			else if (item.roomID == 5)	std::cout << "杨春湖";
-			else	std::cout << "中山湖";
-			for (int i = 0; i < len6 - t6 - (len6 - t6) / 2; i++)	std::cout << ' ';
-			std::cout << " | ";
-
-			for (int i = 0; i < (len7 - t7) / 2; i++)	std::cout << ' ';
-			if (item.status == 0)	std::cout << "审核中";
-			else if (item.status == 1)	std::cout << "已通过";
-			else	std::cout << "已拒绝";
-			for (int i = 0; i < len7 - t7 - (len7 - t7) / 2; i++)	std::cout << ' ';
-			std::cout << " | " << std::endl;
+			if (item.status == 0)	content[7] = "审核中";
+			else if (item.status == 1)	content[7] = "已通过";
+			else	content[7] = "已拒绝";
+			printContent(content, len, 8);
 		}
 		for (int i = 0; i < width; i++) {
 			if (i == 0 || i == width - 1)	std::cout << "+";

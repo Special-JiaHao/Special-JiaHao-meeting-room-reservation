@@ -14,12 +14,8 @@ public:
 	void setCorrespondPort(in_port_t correspondPort);
 	sockaddr_in* getCorrespondSocket();
 	void connectSystem(std::string serverIP, in_port_t serverPort);
-
 private:
 	in_addr_t addr;
 	sockaddr_in* correspondSocket;
 };
-
-
-
 #endif
